@@ -1,0 +1,116 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1b2540"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Calendário Agrícola"><title>Calendário Agrícola Inteligente</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2e6;--card:#fff;--ink:#1d2a1f;--mute:#5d6b5f;--line:#d6ddc9;--leaf:#2f6b3a;--gold:#a8680a;--chip:#e1e8d3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111912;--card:#1a251c;--ink:#e6eddc;--mute:#9fb0a0;--line:#2c3b2f;--leaf:#6fc283;--gold:#e8b04a;--chip:#263629}}
+:root[data-theme="dark"]{--bg:#111912;--card:#1a251c;--ink:#e6eddc;--mute:#9fb0a0;--line:#2c3b2f;--leaf:#6fc283;--gold:#e8b04a;--chip:#263629}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:12px}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:600;margin:0}
+.hero{background:#1b2540;color:#f4efd9;border-radius:20px;padding:18px;display:flex;gap:16px;align-items:center}
+.hero svg{flex:none;width:92px;height:92px}
+.hero h1{font-size:1.5rem;line-height:1.15}
+.hero p{margin:4px 0 0;font-size:.88rem;opacity:.85}
+.foco{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;font-size:.92rem}
+.date{display:flex;gap:8px;align-items:center;margin:10px 0;font-size:.9rem;color:var(--mute)}
+input[type=date],button{font:inherit;color:var(--ink)}
+input[type=date]{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
+button{cursor:pointer}
+.tabs{display:flex;background:var(--chip);border-radius:12px;padding:3px;margin:10px 0}
+.tabs button{flex:1;border:0;background:none;padding:8px;border-radius:9px;font-weight:600}
+.tabs .on{background:var(--card);box-shadow:0 1px 2px #0003}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:.78rem;color:var(--mute)}
+.stats b{display:block;font:600 1.4rem Fraunces,Georgia,serif;color:var(--ink)}
+.row{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 12px;font-size:.85rem}
+.chip.on{background:var(--leaf);border-color:var(--leaf);color:#fff}
+@media(prefers-color-scheme:dark){.chip.on{color:#10190f}}
+details{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:12px;margin:8px 0}
+summary{list-style:none;padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary b{display:block}
+summary small{color:var(--mute)}
+.tag{flex:none;font-size:.72rem;border-radius:99px;padding:2px 8px;background:var(--chip);white-space:nowrap}
+.tag.m{background:var(--gold);color:#fff}
+.tag.off{opacity:.6}
+.det{padding:0 12px 12px;font-size:.9rem}
+.det p{margin:6px 0}
+.mes{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:8px}
+.mes i{font-style:normal;text-align:center;font-size:.7rem;padding:4px 0;border-radius:5px;background:var(--chip);color:var(--mute)}
+.mes .S{background:var(--leaf);color:#fff}.mes .E{background:var(--gold);color:#fff}
+.mes .cur{outline:2px solid var(--ink)}
+@media(prefers-color-scheme:dark){.mes .S{color:#10190f}}
+.mrow{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.mrow.on{border-color:var(--leaf);border-width:2px}
+.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--chip);margin:6px 0}
+.bar span:first-child{background:var(--leaf)}.bar span:last-child{background:var(--gold)}
+.mrow small{color:var(--mute)}
+.leg{font-size:.8rem;color:var(--mute)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tw{overflow:auto;max-height:72vh;border:1px solid var(--line);border-radius:12px;background:var(--card);margin-top:8px}
+table{border-collapse:collapse;min-width:780px;width:100%;font-size:.86rem}
+th{position:sticky;top:0;background:var(--leaf);color:#fff;text-align:left;padding:8px;font-weight:600;white-space:nowrap}
+@media(prefers-color-scheme:dark){th{color:#10190f}}
+td{padding:8px;border-top:1px solid var(--line);vertical-align:top}
+tr[data-k]{cursor:pointer}
+tr.S td:nth-child(4),tr.S td:nth-child(5){background:#2f6b3a22}
+tr.E td:nth-child(4),tr.E td:nth-child(5){background:#a8680a22}
+tr.x{color:var(--mute)}
+td.hi{font-weight:700;color:var(--gold)}
+tr.dt td{background:var(--chip);cursor:default}
+</style></head><body><main id="app"></main>
+<script>
+const D={"c":[["Fruto","Abóbora (cabotiá, menina, moranga)","Semeadura direta / muda","Lua Cheia (ou Crescente)",0,"SS-----SSSSS"],["Fruto","Abobrinha italiana (de moita)","Semeadura direta / muda","Lua Cheia (ou Crescente)",0,"SSSS---SSSSS"],["Fruto","Berinjela","Muda (bandeja)","Lua Crescente",1,"SS----ESSSSS"],["Fruto","Chuchu","Fruto-semente (parreira)","Lua Crescente",1,"SS------SSSS"],["Fruto","Jiló","Muda (bandeja)","Lua Crescente",1,"SS----ESSSSS"],["Fruto","Maracujá","Muda (saquinho/tubete)","Lua Crescente",1,"S-------SSS-"],["Fruto","Maxixe","Semeadura direta","Lua Crescente",1,"SS------SSSS"],["Fruto","Melancia","Semeadura direta / muda","Lua Cheia (ou Crescente)",0,"SS-----SSS--"],["Fruto","Melão","Semeadura direta / muda","Lua Cheia (ou Crescente)",0,"SS-----SS---"],["Fruto","Milho-verde","Semeadura direta","Lua Crescente",1,"SS------SSSS"],["Fruto","Morango","Muda","Lua Crescente",1,"--SSS-------"],["Fruto","Pepino (caipira / japonês)","Semeadura direta / muda","Lua Cheia (ou Crescente)",0,"SSS----SSSSS"],["Fruto","Pimentão","Muda (bandeja)","Lua Cheia (ou Crescente)",0,"SS----ESSSSS"],["Fruto","Pimentas (bico, dedo-de-moça, malagueta)","Muda (bandeja)","Lua Cheia (ou Crescente)",0,"SS----ESSSSS"],["Fruto","Quiabo","Semeadura direta","Lua Crescente",1,"SS-----SSSSS"],["Fruto","Tomate (cereja, italiano, salada)","Muda (bandeja)","Lua Cheia (ou Crescente)",0,"ESS---ESSSEE"],["Folhosa / Brássica","Acelga","Muda / semeadura","Lua Crescente",2,"--SSSSSS----"],["Folhosa / Brássica","Agrião-da-terra","Muda / semeadura","Lua Crescente",2,"E-SSSSS--EEE"],["Folhosa / Brássica","Aipo (salsão)","Muda (bandeja)","Lua Crescente",2,"--SSSSSS----"],["Folhosa / Brássica","Alface (crespa, lisa, americana, roxa)","Muda / hidroponia","Lua Crescente",2,"EESSSSSSEEEE"],["Folhosa / Brássica","Alho-poró","Muda","Lua Crescente",2,"--SSSSSS----"],["Folhosa / Brássica","Almeirão e Escarola","Muda / semeadura","Lua Crescente",2,"-SSSSSSS----"],["Folhosa / Brássica","Brócolis e Couve-flor","Muda (bandeja)","Lua Cheia",3,"-ESSSSS-----"],["Folhosa / Brássica","Couve-chinesa","Muda (bandeja)","Lua Crescente",2,"--SSSSS-----"],["Folhosa / Brássica","Couve-manteiga","Muda / broto","Lua Crescente",2,"SSSSSSSSSSSS"],["Folhosa / Brássica","Espinafre","Semeadura / muda","Lua Crescente",2,"--SSSSSS----"],["Folhosa / Brássica","Mostarda","Semeadura / muda","Lua Crescente",2,"SSS-----SSSS"],["Folhosa / Brássica","Ora-pro-nóbis e Taioba (PANCs)","Estaca / rizoma","Lua Crescente",4,"S-------SSSS"],["Folhosa / Brássica","Repolho","Muda (bandeja)","Lua Cheia",3,"-ESSSSS-----"],["Folhosa / Brássica","Rúcula","Semeadura / hidroponia","Lua Crescente",2,"ESSSSSSSEEEE"],["Raiz / Tubérculo / Bulbo","Alho e Cebola","Bulbilho / muda","Lua Minguante",5,"--SSS-------"],["Raiz / Tubérculo / Bulbo","Batata-doce","Ramas","Lua Minguante",5,"SS------SSSS"],["Raiz / Tubérculo / Bulbo","Batata-inglesa","Batata-semente","Lua Minguante",5,"--SSSSS-----"],["Raiz / Tubérculo / Bulbo","Beterraba","Semeadura direta","Lua Minguante",5,"-ESSSSSS----"],["Raiz / Tubérculo / Bulbo","Cenoura","Semeadura direta","Lua Minguante",5,"-ESSSSSS----"],["Raiz / Tubérculo / Bulbo","Cúrcuma (açafrão-da-terra) e Gengibre","Rizoma","Lua Minguante",5,"--------SSS-"],["Raiz / Tubérculo / Bulbo","Inhame (taro) e Cará","Rizoma / tubérculo","Lua Minguante",5,"--------SSS-"],["Raiz / Tubérculo / Bulbo","Mandioca (aipim / macaxeira)","Maniva","Lua Minguante",5,"--------SSS-"],["Raiz / Tubérculo / Bulbo","Nabo","Semeadura direta","Minguante (ou Crescente)",6,"--SSSSSS----"],["Raiz / Tubérculo / Bulbo","Rabanete","Semeadura direta","Minguante (ou Crescente)",6,"SSSSSSSSS--S"],["Leguminosa / Tempero","Alecrim, Tomilho, Orégano e Sálvia","Muda / estaca","Lua Crescente",7,"--SSSSSS----"],["Leguminosa / Tempero","Amendoim e Feijão-guandu","Semeadura direta","Lua Minguante",8,"--------SSSS"],["Leguminosa / Tempero","Camomila","Semeadura / muda","Lua Crescente",7,"--SSSS------"],["Leguminosa / Tempero","Cebolinha e Salsinha","Muda / semeadura","Lua Crescente",7,"SSSSSSSSSSSS"],["Leguminosa / Tempero","Coentro","Semeadura direta","Lua Crescente",7,"ESSSSSSSSS--"],["Leguminosa / Tempero","Ervilha e Fava","Semeadura direta","Lua Crescente",9,"--SSSS------"],["Leguminosa / Tempero","Feijão-vagem","Semeadura direta","Lua Crescente",9,"SSSS---SSSSS"],["Leguminosa / Tempero","Hortelã e Erva-cidreira","Muda / rizoma","Lua Crescente",7,"S-------SSSS"],["Leguminosa / Tempero","Manjericão","Muda / semeadura","Lua Crescente",7,"SS-----SSSSS"],["Pomar / Perene","Frutíferas Tropicais (citros, manga, abacate, jabuticaba, acerola, banana, mamão)","Muda enxertada / semente","Lua Crescente",10,"SS------SSSS"],["Pomar / Perene","Frutíferas de Clima Temperado (uva, figo, amora, pêssego)","Muda","Lua Crescente",10,"---------SSS"]],"j":["Cheia favorece frutos suculentos e florada; Crescente ajuda no pegamento.","Estimula vigor vegetativo, florada e frutificação.","Estimula crescimento rápido de folhas e evita pendoamento precoce.","Favorece formação de cabeças/inflorescências bem compactas.","Estimula brotação vigorosa das estacas e rizomas.","Força da seiva desce para raízes, tubérculos, rizomas e bulbos.","Raiz rápida; Minguante concentra energia no bulbo.","Estimula brotação aromática e folhas novas.","Vagens se desenvolvem abaixo do solo.","Favorece vagens cheias e boa floração.","Estimula enraizamento inicial e brotação nova das mudas."],"m":[["Hortaliças de fruto, batata-doce e mudas de pomar","Verão (Quente/Chuvoso)"],["Frutos de verão e início de sementeira de brássicas","Verão (Quente/Chuvoso)"],["Abertura plena de folhosas, brássicas, raízes e morango","Outono (Transição)"],["Auge de folhosas, cenoura, beterraba, cebola, alho e morango","Outono (Ameno/Seco)"],["Folhosas de inverno, raízes e bulbos","Outono (Fresco/Seco)"],["Folhosas, brássicas, raízes e temperos","Inverno (Frio/Seco)"],["Folhosas, raízes e sementeira protegida de solanáceas","Inverno (Frio/Seco)"],["Retomada de tomate, pimentão, quiabo, pepino e abóboras","Inverno/Primavera (Seco)"],["Mandioca, inhame, gengibre, cúrcuma, milho e frutos","Primavera (Início Chuvas)"],["Abertura do pomar em campo aberto + culturas das águas","Primavera (Chuvoso)"],["Plantio pleno de frutíferas, tubérculos e hortaliças de calor","Primavera (Chuvoso)"],["Hortaliças de fruto, mudas frutíferas e folhosas protegidas","Verão (Quente/Chuvoso)"]]};
+const MN=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const T=29.530588853,CUT=[1.85,5.54,9.23,12.92,16.61,20.3,23.99,27.68];
+const PN=["Lua Nova","Lua Nova → Crescente","Lua Crescente","Lua Crescente → Cheia","Lua Cheia","Lua Cheia → Minguante","Lua Minguante","Lua Minguante → Nova","Lua Nova"];
+const FO=[["Lua Nova","ideal para preparo do solo, adubação orgânica, podas de limpeza e semeadura de raízes e folhosas de ciclo curto."],["Lua Crescente","seiva subindo: excelente para folhosas, frutos, leguminosas, temperos e transplante de mudas."],["Lua Cheia","pico de seiva nas copas: ótimo para frutos suculentos e brássicas de cabeça."],["Lua Minguante","seiva concentrada nas raízes: melhor para mandioca, batata-doce, cenoura, beterraba, cebola e alho."]];
+const FM=[0,1,1,1,2,2,3,3,0];
+const st={d:new Date(),cat:"",campo:0,estufa:0,fav:0,off:0,tab:0};
+st.d.setHours(0,0,0,0);
+const serial=d=>Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(1899,11,30))/864e5);
+const phase=d=>((serial(d)+0.5-46040.82778)%T+T)%T;
+const seg=p=>{const i=CUT.findIndex(c=>p<c);return i<0?8:i};
+const fav=(l,n)=>["Crescente","Cheia","Minguante"].some(w=>l.includes(w)&&n.includes(w));
+function moon(p){const k=Math.cos(2*Math.PI*p/T),rx=Math.abs(k)*44,w=p<T/2;
+const a=w?0:1,b=w?(k>0?1:0):(k>0?0:1);
+return `<svg viewBox="0 0 100 100" role="img" aria-label="Fase da Lua"><circle cx="50" cy="50" r="44" fill="#2c3860"/><path d="M50 6A44 44 0 0 ${a} 50 94A${rx.toFixed(1)} 44 0 0 ${b} 50 6Z" fill="#f4efd9"/></svg>`}
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+function render(){
+const d=st.d,mo=d.getMonth(),p=phase(d),s=seg(p),pn=PN[s],ilu=Math.round((1-Math.cos(2*Math.PI*p/T))/2*100),fo=FO[FM[s]];
+const all=D.c.map(([cat,nome,forma,lua,j,m])=>({cat,nome,forma,lua,j,m,s:m[mo],f:fav(lua,pn)}));
+const ins=all.filter(x=>x.s!="-");
+let L=all.filter(x=>(st.off||x.s!="-")&&(!st.cat||x.cat==st.cat)&&(!st.fav||x.f&&x.s!="-")&&((!st.campo&&!st.estufa)||(st.campo&&x.s=="S")||(st.estufa&&x.s=="E")));
+L.sort((a,b)=>(b.s!="-")-(a.s!="-")||b.f*(b.s!="-")-a.f*(a.s!="-")||a.nome.localeCompare(b.nome));
+const cs=[...new Set(D.c.map(x=>x[0]))];
+const chip=(t,on,k,v)=>`<button class="chip${on?" on":""}" data-k="${k}" data-v="${v}">${t}</button>`;
+let h=`<section class="hero">${moon(p)}<div><h1>${pn}</h1><p>Dia ${p.toFixed(1)} do ciclo, cerca de ${ilu}% iluminada. Hemisfério Sul.</p></div></section>
+<div class="foco"><b>${fo[0]}:</b> ${fo[1]}</div>
+<div class="date"><label for="dt">Data</label><input id="dt" type="date" value="${iso(d)}"><button class="chip" data-k="hoje">Hoje</button><span>${MN[mo]}</span></div>
+<div class="tabs"><button class="${st.tab?"":"on"}" data-k="tab" data-v="0">Culturas</button><button class="${st.tab?"on":""}" data-k="tab" data-v="1">Ano</button></div>`;
+if(!st.tab){
+h+=`<div class="stats"><div><b>${ins.length}</b>na época</div><div><b>${ins.filter(x=>x.s=="S").length} · ${ins.filter(x=>x.s=="E").length}</b>campo · estufa</div><div><b>${ins.filter(x=>x.f).length}</b>com lua favorável</div></div>
+<div class="row">${chip("Todas",!st.cat,"cat","")}${cs.map(c=>chip(c,st.cat==c,"cat",c)).join("")}</div>
+<div class="row">${chip("Campo aberto",st.campo,"campo",1)}${chip("Estufa ou sombrite",st.estufa,"estufa",1)}${chip("Lua favorável",st.fav,"fav",1)}${chip("Fora de época",st.off,"off",1)}</div>`;
+h+=L.length?`<div class="leg" style="margin-top:12px">Toque em uma linha para ver a justificativa lunar e os meses de plantio.</div><div class="tw"><table><thead><tr><th>Categoria</th><th>Cultura</th><th>Forma de plantio</th><th>Status no mês</th><th>Situação esta semana</th><th>Lua ideal da cultura</th><th>Sinergia com a lua atual</th></tr></thead><tbody>${L.map(x=>{const on=st.o&&st.o[x.nome],f=x.s=="-";return `<tr class="${f?"x":x.s}" data-k="open" data-v="${encodeURIComponent(x.nome)}"><td>${x.cat}</td><td><b>${x.nome}</b></td><td>${x.forma}</td><td>${x.s=="S"?"SIM":x.s=="E"?"EST":"—"}</td><td>${f?"Fora de época":x.s=="S"?"EXCELENTE (Campo Aberto)":"EXCELENTE (Estufa/Sombrite)"}</td><td>${f?"":x.lua}</td><td class="${x.f&&!f?"hi":""}">${f?"—":x.f?"ALTA (Lua Ideal Agora)":"Normal (Época Certa)"}</td></tr>`+(on?`<tr class="dt"><td colspan="7"><p><b>Justificativa lunar e manejo:</b> ${D.j[x.j]}</p><div class="mes" style="max-width:360px">${[..."JFMAMJJASOND"].map((l,i)=>`<i class="${x.m[i]}${i==mo?" cur":""}" title="${MN[i]}">${l}</i>`).join("")}</div><p class="leg">Verde: campo aberto. Amarelo: estufa ou sombrite.</p></td></tr>`:"")}).join("")}</tbody></table></div>`:`<p class="leg">Nenhuma cultura com esses filtros. Tire um filtro para ver mais.</p>`;
+}else{
+const ct=D.m.map((m,i)=>[all.filter(x=>x.m[i]=="S").length,all.filter(x=>x.m[i]=="E").length]),mx=Math.max(...ct.map(c=>c[0]+c[1]));
+h+=D.m.map((m,i)=>`<button class="mrow${i==mo?" on":""}" data-k="mes" data-v="${i}"><b>${MN[i]}</b> <small>${m[0]}</small><div class="bar"><span style="width:${ct[i][0]/mx*100}%"></span><span style="width:${ct[i][1]/mx*100}%"></span></div><small>${ct[i][0]} em campo, ${ct[i][1]} em estufa. ${m[1]}</small></button>`).join("")+`<p class="leg">Toque em um mês para ver as culturas dele.</p>`}
+$("#app").innerHTML=h}
+const $=s=>document.querySelector(s);
+document.addEventListener("click",e=>{const b=e.target.closest("[data-k]");if(!b)return;const k=b.dataset.k,v=b.dataset.v;
+if(k=="hoje"){st.d=new Date();st.d.setHours(0,0,0,0)}
+else if(k=="tab")st.tab=+v;
+else if(k=="open"){st.o=st.o||{};const n=decodeURIComponent(v);st.o[n]=!st.o[n]}
+else if(k=="cat")st.cat=v;
+else if(k=="mes"){st.d=new Date(st.d.getFullYear(),+v,15);st.tab=0;scrollTo(0,0)}
+else st[k]=st[k]?0:1;
+render()});
+document.addEventListener("change",e=>{if(e.target.id=="dt"&&e.target.value){const[y,m,d]=e.target.value.split("-").map(Number);st.d=new Date(y,m-1,d);render()}});
+render();
+</script><script>if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js"))</script></body></html>
