@@ -65,6 +65,20 @@ td.hi{font-weight:700;color:var(--gold)}
 tr.dt td{background:var(--chip);cursor:default}
 .wP{color:var(--leaf);font-weight:600}.wE{color:var(--gold);font-weight:600}.wN{color:#b3261e;font-weight:700}
 @media(prefers-color-scheme:dark){.wN{color:#ff8a7a}}
+.bar2{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px 0 4px}
+.cu{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:8px 0;overflow:hidden}
+.cu.on{border-color:var(--leaf)}
+.cu-h{display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;background:none;border:0;padding:14px;text-align:left}
+.cu-h b{display:block;font:600 1.15rem/1.25 Fraunces,Georgia,serif}
+.cu-h small{color:var(--mute)}
+.chev{font-size:1.6rem;line-height:1;color:var(--mute);transition:transform .15s}
+.cu.on .chev{transform:rotate(90deg)}
+.cu-b{margin:0;padding:0 14px 14px;display:grid;grid-template-columns:104px 1fr;gap:10px 12px;font-size:.9rem}
+.cu-b dt{color:var(--mute);font-size:.78rem;padding-top:2px}
+.cu-b dd{margin:0}
+.cu-b .hi{font-weight:700;color:var(--gold)}
+.nt{display:block;color:var(--ink);font-weight:400;margin-top:2px}
+@media(prefers-reduced-motion:reduce){.chev{transition:none}}
 .srch{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:2px 12px;margin-top:10px}
 .srch:focus-within{border-color:var(--leaf)}
 .srch input{flex:1;min-width:0;border:0;background:none;padding:10px 0;font:inherit;color:var(--ink);outline:none}
@@ -104,7 +118,9 @@ h+=`<div class="stats"><div><b>${ins.length}</b>na época</div><div><b>${ins.fil
 <div class="srch"><span aria-hidden="true">🔍</span><input id="q" type="search" placeholder="Buscar cultura" aria-label="Buscar cultura" autocomplete="off" value="${st.q.replace(/"/g,"&quot;")}"></div>
 <div class="row">${chip("Todas",!st.cat,"cat","")}${cs.map(c=>chip(c,st.cat==c,"cat",c)).join("")}</div>
 <div class="row">${chip("Campo aberto",st.campo,"campo",1)}${chip("Estufa ou sombrite",st.estufa,"estufa",1)}${chip("Lua favorável",st.fav,"fav",1)}${chip("Pode molhar as folhas",st.w,"w",1)}${chip("Fora de época",st.off,"off",1)}</div>`;
-h+=L.length?`<div class="leg" style="margin-top:12px">Toque em uma linha para ver a justificativa lunar e os meses de plantio.</div><div class="tw"><table><thead><tr><th>Categoria</th><th>Cultura</th><th>Forma de plantio</th><th>Status no mês</th><th>Situação esta semana</th><th>Lua ideal da cultura</th><th>Sinergia com a lua atual</th><th>Molhar as folhas?</th></tr></thead><tbody>${L.map(x=>{const on=st.o&&st.o[x.nome],f=x.s=="-";return `<tr class="${f?"x":x.s}" data-k="open" data-v="${encodeURIComponent(x.nome)}"><td>${x.cat}</td><td><b>${x.nome}</b></td><td>${x.forma}</td><td>${x.s=="S"?"SIM":x.s=="E"?"EST":"—"}</td><td>${f?"Fora de época":x.s=="S"?"EXCELENTE (Campo Aberto)":"EXCELENTE (Estufa/Sombrite)"}</td><td>${f?"":x.lua}</td><td class="${x.f&&!f?"hi":""}">${f?"—":x.f?"ALTA (Lua Ideal Agora)":"Normal (Época Certa)"}</td><td class="w${x.w[0]}">${x.w[0]=="P"?"Pode":x.w[0]=="E"?"Evitar":"NÃO molhar"}</td></tr>`+(on?`<tr class="dt"><td colspan="8"><p><b>Justificativa lunar e manejo:</b> ${D.j[x.j]}</p><p><b>Molhar as folhas:</b> ${x.w[1]}</p><div class="mes" style="max-width:360px">${[..."JFMAMJJASOND"].map((l,i)=>`<i class="${x.m[i]}${i==mo?" cur":""}" title="${MN[i]}">${l}</i>`).join("")}</div><p class="leg">Verde: campo aberto. Amarelo: estufa ou sombrite.</p></td></tr>`:"")}).join("")}</tbody></table></div>`:`<p class="leg">Nenhuma cultura com esses filtros. Tire um filtro para ver mais.</p>`;
+st._L=L.map(x=>x.nome);
+const ao=L.length&&L.every(x=>st.o&&st.o[x.nome]);
+h+=L.length?`<div class="bar2"><span class="leg">${L.length} ${L.length==1?"cultura":"culturas"}. Toque no nome para abrir.</span><button class="chip" data-k="all">${ao?"Recolher tudo":"Expandir tudo"}</button></div>`+L.map(x=>{const on=st.o&&st.o[x.nome],f=x.s=="-",w=x.w[0];return `<div class="cu${on?" on":""}"><button class="cu-h" data-k="open" data-v="${encodeURIComponent(x.nome)}" aria-expanded="${on?"true":"false"}"><span><b>${x.nome}</b><small>${x.cat}</small></span><span class="chev" aria-hidden="true">›</span></button>`+(on?`<dl class="cu-b"><dt>Forma de plantio</dt><dd>${x.forma}</dd><dt>Status no mês</dt><dd>${x.s=="S"?"SIM":x.s=="E"?"EST":"—"}</dd><dt>Situação esta semana</dt><dd>${f?"Fora de época":x.s=="S"?"EXCELENTE (Campo Aberto)":"EXCELENTE (Estufa/Sombrite)"}</dd><dt>Lua ideal da cultura</dt><dd>${x.lua}</dd><dt>Sinergia com a lua atual</dt><dd class="${x.f&&!f?"hi":""}">${f?"—":x.f?"ALTA (Lua Ideal Agora)":"Normal (Época Certa)"}</dd><dt>Molhar as folhas?</dt><dd class="w${w}">${w=="P"?"Pode":w=="E"?"Evitar":"NÃO molhar"}<span class="nt">${x.w[1]}</span></dd><dt>Justificativa lunar</dt><dd>${D.j[x.j]}</dd><dt>Meses de plantio</dt><dd><div class="mes">${[..."JFMAMJJASOND"].map((l,i)=>`<i class="${x.m[i]}${i==mo?" cur":""}" title="${MN[i]}">${l}</i>`).join("")}</div><p class="leg">Verde: campo aberto. Amarelo: estufa ou sombrite.</p></dd></dl>`:"")+`</div>`}).join(""):`<p class="leg">Nenhuma cultura com esses filtros. Tire um filtro para ver mais.</p>`;
 }else{
 const ct=D.m.map((m,i)=>[all.filter(x=>x.m[i]=="S").length,all.filter(x=>x.m[i]=="E").length]),mx=Math.max(...ct.map(c=>c[0]+c[1]));
 h+=D.m.map((m,i)=>`<button class="mrow${i==mo?" on":""}" data-k="mes" data-v="${i}"><b>${MN[i]}</b> <small>${m[0]}</small><div class="bar"><span style="width:${ct[i][0]/mx*100}%"></span><span style="width:${ct[i][1]/mx*100}%"></span></div><small>${ct[i][0]} em campo, ${ct[i][1]} em estufa. ${m[1]}</small></button>`).join("")+`<p class="leg">Toque em um mês para ver as culturas dele.</p>`}
@@ -114,6 +130,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-k]");if(!b
 if(k=="hoje"){st.d=new Date();st.d.setHours(0,0,0,0)}
 else if(k=="tab")st.tab=+v;
 else if(k=="open"){st.o=st.o||{};const n=decodeURIComponent(v);st.o[n]=!st.o[n]}
+else if(k=="all"){const ns=st._L||[];st.o=st.o||{};const ao=ns.every(n=>st.o[n]);ns.forEach(n=>st.o[n]=!ao)}
 else if(k=="cat")st.cat=v;
 else if(k=="mes"){st.d=new Date(st.d.getFullYear(),+v,15);st.tab=0;scrollTo(0,0)}
 else st[k]=st[k]?0:1;
